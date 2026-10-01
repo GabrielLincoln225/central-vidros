@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { waLink } from '../config/site';
 import { trackOrcamento, trackUsoAntesDepois } from '../utils/analytics';
 import { IconCheck, IconWhatsApp } from './Icons';
+import gsap from 'gsap';
 
 type TabKey = 'veiculos' | 'casa' | 'comercio';
 
@@ -41,45 +42,47 @@ export const Insulfilm: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('veiculos');
   const [sliderPos, setSliderPos] = useState<number>(50);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [hasAnimatedIntro, setHasAnimatedIntro] = useState<boolean>(false);
-  
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const introTweenRef = useRef<gsap.core.Timeline | null>(null);
+  const trackedRef = useRef<boolean>(false);
 
-  // Entrance presentation animation: 50% -> 25% -> 75% -> 50%
+  // Entrance presentation animation: 50% -> 25% -> 75% -> 50%, smoothly tweened
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      setHasAnimatedIntro(true);
-      return;
-    }
+    const el = sliderRef.current;
+    if (prefersReducedMotion || !el) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !hasAnimatedIntro) {
-          setHasAnimatedIntro(true);
-          // Run presentation demo
-          let step = 0;
-          const sequence = [25, 75, 50];
-          const runStep = () => {
-            if (step < sequence.length) {
-              setSliderPos(sequence[step]);
-              step++;
-              setTimeout(runStep, 450);
-            }
-          };
-          setTimeout(runStep, 300);
-        }
+        if (!entries[0].isIntersecting) return;
+        observer.disconnect();
+        const proxy = { v: 50 };
+        const apply = () => setSliderPos(proxy.v);
+        introTweenRef.current = gsap
+          .timeline({ delay: 0.3 })
+          .to(proxy, { v: 25, duration: 0.6, ease: 'power2.inOut', onUpdate: apply })
+          .to(proxy, { v: 75, duration: 0.9, ease: 'power2.inOut', onUpdate: apply })
+          .to(proxy, { v: 50, duration: 0.6, ease: 'power2.inOut', onUpdate: apply });
       },
-      { threshold: 0.3 }
+      { threshold: 0.4 }
     );
+    observer.observe(el);
 
-    if (sliderRef.current) {
-      observer.observe(sliderRef.current);
+    return () => {
+      observer.disconnect();
+      introTweenRef.current?.kill();
+    };
+  }, []);
+
+  const markUsed = () => {
+    // The user took over: stop the demo and report usage once
+    introTweenRef.current?.kill();
+    if (!trackedRef.current) {
+      trackedRef.current = true;
+      trackUsoAntesDepois();
     }
-
-    return () => observer.disconnect();
-  }, [hasAnimatedIntro]);
+  };
 
   const updatePosition = useCallback((clientX: number) => {
     if (!sliderRef.current) return;
@@ -87,15 +90,17 @@ export const Insulfilm: React.FC = () => {
     const x = clientX - rect.left;
     const pos = Math.min(Math.max((x / rect.width) * 100, 0), 100);
     setSliderPos(pos);
-    trackUsoAntesDepois();
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    markUsed();
     setIsDragging(true);
     updatePosition(e.clientX);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    markUsed();
     setIsDragging(true);
     updatePosition(e.touches[0].clientX);
   };
@@ -112,19 +117,22 @@ export const Insulfilm: React.FC = () => {
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleEnd);
-      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchmove', handleTouchMove, { passive: true });
       window.addEventListener('touchend', handleEnd);
+      window.addEventListener('touchcancel', handleEnd);
     }
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleEnd);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleEnd);
+      window.removeEventListener('touchcancel', handleEnd);
     };
   }, [isDragging, updatePosition]);
 
   // Keyboard accessibility
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') introTweenRef.current?.kill();
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
       setSliderPos((prev) => Math.max(prev - 5, 0));
@@ -144,7 +152,7 @@ export const Insulfilm: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="mb-14 md:mb-16">
+        <div className="mb-14 md:mb-16" data-reveal>
           <span className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-central-red mb-3 block">
             Insulfilm
           </span>
@@ -169,7 +177,7 @@ export const Insulfilm: React.FC = () => {
               onKeyDown={handleKeyDown}
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
-              className="relative w-full aspect-[1040/650] rounded-sm overflow-hidden select-none cursor-ew-resize bg-central-black border border-central-surface shadow-2xl focus:outline-none focus:ring-2 focus:ring-central-red"
+              className="relative w-full aspect-[1040/650] rounded-sm overflow-hidden select-none cursor-ew-resize touch-pan-y bg-central-black border border-central-surface shadow-2xl focus:outline-none focus:ring-2 focus:ring-central-red"
             >
               {/* After Image (Background: Com película) */}
               <picture className="absolute inset-0 w-full h-full pointer-events-none">
@@ -183,7 +191,7 @@ export const Insulfilm: React.FC = () => {
 
               {/* Before Image (Clipped Overlay: Sem película) */}
               <div
-                className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none transition-[clip-path] duration-75"
+                className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
                 style={{
                   clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)`,
                 }}
@@ -212,7 +220,7 @@ export const Insulfilm: React.FC = () => {
 
               {/* Slider Line & Circular Handle */}
               <div
-                className="absolute top-0 bottom-0 z-20 pointer-events-none transition-[left] duration-75"
+                className="absolute top-0 bottom-0 z-20 pointer-events-none"
                 style={{ left: `${sliderPos}%` }}
               >
                 {/* Thin vertical dividing line */}

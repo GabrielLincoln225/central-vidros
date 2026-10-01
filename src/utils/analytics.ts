@@ -1,4 +1,5 @@
 // Analytics helper for @vercel/analytics and custom telemetry
+import { track } from '@vercel/analytics';
 export type OrcamentoOrigem =
   | 'hero'
   | 'header'
@@ -17,15 +18,11 @@ export function trackHeroSlide(slide: number | string, origem: HeroSlideOrigem):
   });
 }
 
-export function trackEvent(name: string, props?: Record<string, unknown>): void {
+export function trackEvent(name: string, props?: Record<string, string | number | boolean | null>): void {
   try {
     if (typeof window !== 'undefined') {
-      // Vercel analytics or custom window event dispatch
-      const va = (window as unknown as { va?: (type: string, name: string, props?: Record<string, unknown>) => void }).va;
-      if (va) {
-        va('event', name, props);
-      }
-      
+      track(name, props);
+
       // Dispatch browser custom event for debugging or third-party listeners
       window.dispatchEvent(new CustomEvent('site_analytics', { detail: { name, props } }));
     }

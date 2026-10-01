@@ -31,6 +31,7 @@ export const Marcas: React.FC = () => {
             {MARCAS.map((marca) => (
               <div
                 key={marca.name}
+                data-reveal-item
                 className="w-full max-w-[160px] h-14 flex items-center justify-center transition-all duration-300 group"
               >
                 <img

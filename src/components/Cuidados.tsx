@@ -50,7 +50,7 @@ export const Cuidados: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="mb-16 md:mb-20">
+        <div className="mb-16 md:mb-20" data-reveal>
           <span className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-central-red mb-3 block">
             Fique de olho
           </span>
@@ -64,6 +64,7 @@ export const Cuidados: React.FC = () => {
           {CUIDADOS_DATA.map((item) => (
             <div
               key={item.id}
+              data-reveal-item
               className="relative min-h-[480px] lg:min-h-[560px] md:h-auto rounded-sm overflow-hidden flex flex-col justify-end p-8 sm:p-10 border border-central-surface group shadow-xl transition-all duration-500 hover:border-central-red/60"
             >
               {/* Dark Background Image with Subtle Parallax/Hover Scale */}
@@ -74,12 +75,12 @@ export const Cuidados: React.FC = () => {
                     src={item.imagem}
                     alt={item.sinal}
                     loading="lazy"
-                    className="w-full h-full object-cover object-center filter grayscale brightness-50 transition-transform duration-700 ease-out group-hover:scale-105 group-hover:brightness-60"
+                    className="w-full h-full object-cover object-center filter grayscale brightness-[0.65] transition-[transform,filter] duration-700 ease-out group-hover:scale-105 group-hover:brightness-90"
                   />
                 </picture>
                 
                 {/* Heavy Dark Gradient Overlay for Contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-central-black via-central-black/85 to-central-black/40" />
+                <div className="absolute inset-0 bg-gradient-to-t from-central-black via-central-black/70 to-central-black/20" />
                 <div className="absolute inset-0 bg-central-dark/30 mix-blend-multiply" />
               </div>
 

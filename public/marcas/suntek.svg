@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" fill="currentColor">
-  <text x="0" y="52" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="44" letter-spacing="4">SunTek</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" fill="#FFFFFF">
+  <text x="0" y="52" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="44" letter-spacing="4" textLength="176" lengthAdjust="spacingAndGlyphs">SunTek</text>
   <rect x="182" y="24" width="8" height="8" fill="#E8302A" />
-  <text x="2" y="68" font-family="'Inter', sans-serif" font-weight="700" font-size="10" letter-spacing="3" opacity="0.7">WINDOW FILMS</text>
+  <text x="2" y="68" font-family="'Inter', sans-serif" font-weight="700" font-size="10" letter-spacing="3" opacity="0.7" textLength="170" lengthAdjust="spacingAndGlyphs">WINDOW FILMS</text>
 </svg>

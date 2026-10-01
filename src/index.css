@@ -73,14 +73,16 @@
   background: #E8302A;
 }
 
-/* Hero stage 4-edge gradient mask */
-.hero-stage-mask {
-  mask-image: linear-gradient(to right, transparent 0%, black 18%, black 92%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 92%, transparent 100%),
-                      linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
+/* Hero stage 4-edge gradient mask (desktop): left edge fades ~18%, the others ~8% */
+@media (min-width: 1024px) {
+  .hero-stage-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 92%, transparent 100%),
+                        linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 18%, black 92%, transparent 100%),
+                linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
 }
 
 /* Subtle red floor vignette pulsing */
@@ -94,11 +96,48 @@
 
 /* Callout pulsing dot ring */
 @keyframes calloutRingPulse {
-  0% { transform: scale(1); opacity: 0.7; }
+  0% { transform: scale(1); opacity: 0.6; }
   100% { transform: scale(2.2); opacity: 0; }
 }
 .animate-callout-pulse {
   transform-box: fill-box;
   transform-origin: center;
   animation: calloutRingPulse 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Hide horizontal scrollbars on chip/carousel rows */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Lightweight enter animations (used as: animate-in fade-in slide-in-from-*) */
+@keyframes anim-enter {
+  from {
+    opacity: var(--anim-enter-opacity, 1);
+    transform: translate3d(var(--anim-enter-x, 0), var(--anim-enter-y, 0), 0);
+  }
+}
+.animate-in {
+  animation: anim-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.fade-in {
+  --anim-enter-opacity: 0;
+}
+.slide-in-from-left-2 {
+  --anim-enter-x: -0.5rem;
+}
+.slide-in-from-bottom-2 {
+  --anim-enter-y: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .animate-vignette-pulse,
+  .animate-callout-pulse {
+    animation: none !important;
+  }
 }

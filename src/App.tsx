@@ -13,8 +13,12 @@ import { Avaliacoes } from './components/Avaliacoes';
 import { Visite } from './components/Visite';
 import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
+import { setLenis, scrollToTarget } from './utils/scroll';
+import { Analytics } from '@vercel/analytics/react';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export const App: React.FC = () => {
   const [hasPassedHero, setHasPassedHero] = useState<boolean>(false);
@@ -29,100 +33,108 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let lenis: Lenis | null = null;
+    if (prefersReducedMotion) {
+      setHasPassedHero(true);
+      return;
+    }
 
-    if (!prefersReducedMotion) {
-      // Initialize Lenis smooth scroll
-      lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        smoothWheel: true,
+    // Lenis smooth scroll, driven by GSAP's ticker so ScrollTrigger stays in sync
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      smoothWheel: true,
+    });
+    setLenis(lenis);
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const tickerCallback = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
+
+    // Any in-page "#..." link scrolls smoothly with the header offset
+    const handleAnchorClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      const link = (e.target as HTMLElement | null)?.closest('a[href^="#"]') as HTMLAnchorElement | null;
+      if (!link) return;
+      const href = link.getAttribute('href') || '#';
+      if (href !== '#' && !document.querySelector(href)) return;
+      e.preventDefault();
+      scrollToTarget(href);
+    };
+    document.addEventListener('click', handleAnchorClick);
+
+    // Scroll reveal animations
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            clearProps: 'transform',
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+          }
+        );
       });
 
-      // Synchronize Lenis with GSAP ScrollTrigger
-      lenis.on('scroll', ScrollTrigger.update);
-
-      const tickerCallback = (time: number) => {
-        lenis?.raf(time * 1000);
-      };
-
-      gsap.ticker.add(tickerCallback);
-      gsap.ticker.lagSmoothing(0);
-
-      // Section animations: one orchestrated timeline per section
-      const sections = ['#servicos', '#insulfilm', '#cuidados', '#marcas', '#avaliacoes', '#visite'];
-      sections.forEach((selector) => {
-        const el = document.querySelector(selector);
-        if (el) {
-          gsap.fromTo(
-            el,
-            { opacity: 0.9, y: 15 },
-            {
+      const items = gsap.utils.toArray<HTMLElement>('[data-reveal-item]');
+      if (items.length) {
+        gsap.set(items, { opacity: 0, y: 40 });
+        ScrollTrigger.batch(items, {
+          start: 'top 92%',
+          once: true,
+          onEnter: (batch) =>
+            gsap.to(batch, {
               opacity: 1,
               y: 0,
               duration: 0.8,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: el,
-                start: 'top 85%',
-                toggleActions: 'play none none none',
-              },
-            }
-          );
-        }
-      });
+              stagger: 0.1,
+              ease: 'power3.out',
+              clearProps: 'transform',
+              overwrite: true,
+            }),
+        });
+      }
+    });
 
-      // Refresh ScrollTrigger after all assets and fonts finish loading
-      window.addEventListener('load', () => {
-        ScrollTrigger.refresh();
-      });
+    // Recalculate trigger positions once images/fonts have settled
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener('load', refresh);
+    document.fonts?.ready.then(refresh).catch(() => {});
 
-      return () => {
-        gsap.ticker.remove(tickerCallback);
-        lenis?.destroy();
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      };
-    } else {
-      // In reduced motion mode, header is visible
-      setHasPassedHero(true);
-    }
+    return () => {
+      document.removeEventListener('click', handleAnchorClick);
+      window.removeEventListener('load', refresh);
+      gsap.ticker.remove(tickerCallback);
+      ctx.revert();
+      lenis.destroy();
+      setLenis(null);
+    };
   }, []);
 
   return (
     <div className="min-h-screen bg-central-black text-white relative">
-      {/* Fixed Header */}
       <Header visible={hasPassedHero || isMobile} />
 
-      {/* Main Content */}
       <main>
-        {/* 1. Hero Service Selector with Turntable Car */}
         <Hero onPinLeave={setHasPassedHero} />
-
-        {/* 3. Serviços */}
         <Servicos />
-
-        {/* 4. Insulfilm */}
         <Insulfilm />
-
-        {/* 5. Cuidados */}
         <Cuidados />
-
-        {/* 6. Marcas */}
         <Marcas />
-
-        {/* 7. Avaliações */}
         <Avaliacoes />
-
-        {/* 8. Visite */}
         <Visite />
       </main>
 
-      {/* 9. Rodapé */}
       <Footer />
 
-      {/* 10. Barra Fixa Mobile */}
       <MobileStickyBar hasPassedHero={hasPassedHero} />
+
+      <Analytics />
     </div>
   );
 };

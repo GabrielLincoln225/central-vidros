@@ -66,17 +66,18 @@ export const Avaliacoes: React.FC = () => {
     const step = (intervalTime / totalTime) * 100;
 
     const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setActiveIndex((cur) => (cur + 1) % depoimentos.length);
-          return 0;
-        }
-        return prev + step;
-      });
+      setProgress((prev) => Math.min(100, prev + step));
     }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [isPaused, isInView, depoimentos.length]);
+  }, [isPaused, isInView]);
+
+  // Advance once the bar fills (kept out of the state updater so it runs exactly once)
+  useEffect(() => {
+    if (progress < 100) return;
+    setActiveIndex((cur) => (cur + 1) % depoimentos.length);
+    setProgress(0);
+  }, [progress, depoimentos.length]);
 
   const handleSelect = (idx: number) => {
     setActiveIndex(idx);
@@ -93,7 +94,7 @@ export const Avaliacoes: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 md:mb-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 md:mb-20" data-reveal>
           <div>
             <span className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-central-red mb-3 block">
               Avaliações no Google
@@ -152,7 +153,10 @@ export const Avaliacoes: React.FC = () => {
                 <span className="text-central-red font-display text-7xl lg:text-8xl font-black leading-none block -mb-6 select-none opacity-80">
                   “
                 </span>
-                <p className="text-2xl lg:text-3xl font-display font-bold uppercase tracking-tight text-white leading-snug animate-in fade-in duration-300">
+                <p
+                  key={activeItem.id}
+                  className="text-2xl lg:text-3xl font-display font-bold uppercase tracking-tight text-white leading-snug animate-in fade-in slide-in-from-bottom-2"
+                >
                   {activeItem.texto}
                 </p>
               </div>
@@ -160,7 +164,7 @@ export const Avaliacoes: React.FC = () => {
 
             {/* Author */}
             <div className="mt-10 pt-6 border-t border-central-surface/80 flex items-center justify-between">
-              <span className="text-base font-display uppercase tracking-widest text-zinc-300 font-bold">
+              <span key={activeItem.id} className="text-base font-display uppercase tracking-widest text-zinc-300 font-bold animate-in fade-in">
                 {activeItem.autor}
               </span>
               <span className="text-xs text-central-gray font-mono">

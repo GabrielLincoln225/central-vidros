@@ -111,7 +111,7 @@ export const Servicos: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="mb-16 md:mb-20">
+        <div className="mb-16 md:mb-20" data-reveal>
           <span className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-central-red mb-3 block">
             Serviços
           </span>
@@ -292,7 +292,7 @@ export const Servicos: React.FC = () => {
         </div>
 
         {/* Bottom Editorial Callout */}
-        <div className="mt-16 md:mt-24 p-8 md:p-10 bg-central-dark border border-central-surface rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div data-reveal className="mt-16 md:mt-24 p-8 md:p-10 bg-central-dark border border-central-surface rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <span className="text-xs font-mono uppercase tracking-widest text-central-gray block mb-1">
               Atendimento amplo

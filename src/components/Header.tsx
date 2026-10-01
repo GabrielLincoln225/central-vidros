@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { waLink, INSTAGRAM_URL, PHONE_DISPLAY, PHONE_TEL } from '../config/site';
 import { IconInstagram, IconWhatsApp, IconMenu, IconClose } from './Icons';
 import { trackOrcamento, trackInstagram, trackTelefone } from '../utils/analytics';
+import { scrollToTarget, lockScroll } from '../utils/scroll';
 
 interface HeaderProps {
   visible: boolean;
@@ -36,12 +37,24 @@ export const Header: React.FC<HeaderProps> = ({ visible }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock page scroll while the drawer is open; Esc closes it
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    lockScroll(true);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      lockScroll(false);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [mobileMenuOpen]);
+
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Give the drawer's scroll lock time to release before scrolling
+    window.setTimeout(() => scrollToTarget(href), 60);
   };
 
   return (
@@ -131,16 +144,29 @@ export const Header: React.FC<HeaderProps> = ({ visible }) => {
       </header>
 
       {/* Mobile Drawer / Sheet */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex justify-end" role="dialog" aria-modal="true">
+      {(
+        <div
+          className={`fixed inset-0 z-[60] md:hidden flex justify-end transition-[visibility] ${mobileMenuOpen ? 'visible' : 'invisible delay-300'}`}
+          role="dialog"
+          aria-modal="true"
+          aria-hidden={!mobileMenuOpen}
+          aria-label="Menu de navegação"
+          data-lenis-prevent
+        >
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            className={`fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
+              mobileMenuOpen ? 'opacity-100' : 'opacity-0'
+            }`}
             onClick={() => setMobileMenuOpen(false)}
           />
 
           {/* Sheet Panel */}
-          <div className="relative w-full max-w-xs bg-central-dark border-l border-central-surface p-6 flex flex-col justify-between h-full shadow-2xl z-10">
+          <div
+            className={`relative w-[85%] max-w-xs bg-central-dark border-l border-central-surface p-6 flex flex-col justify-between h-full overflow-y-auto shadow-2xl z-10 transition-transform duration-300 ease-out ${
+              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
+          >
             <div>
               <div className="flex items-center justify-between pb-6 border-b border-central-surface">
                 <img
