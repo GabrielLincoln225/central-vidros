@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Production build output
+dist/
+
+# Vercel
+.vercel/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large archive files & root raw media
+*.zip
+*.log
+Black_SUV_in_studio_*
+Car_window_tinting_*
+SUV_rotating_*

@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-central-red: #E8302A;
+    --color-central-black: #0A0A0A;
+    --color-central-dark: #141414;
+    --color-central-surface: #1C1C1C;
+    --color-central-gray: #696B6B;
+    --color-white: #FFFFFF;
+  }
+
+  html {
+    background-color: var(--color-central-black);
+    color: var(--color-white);
+    font-family: 'Inter', sans-serif;
+    color-scheme: dark;
+  }
+
+  /* Lenis smooth scrolling integration */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
+  /* Section anchor offsets for fixed header */
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  /* Headings Condensadas */
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+}
+
+/* Custom Selection */
+::selection {
+  background-color: #E8302A;
+  color: #FFFFFF;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #1C1C1C;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E8302A;
+}
+
+/* Hero stage 4-edge gradient mask */
+.hero-stage-mask {
+  mask-image: linear-gradient(to right, transparent 0%, black 18%, black 92%, transparent 100%),
+              linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 92%, transparent 100%),
+                      linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
+/* Subtle red floor vignette pulsing */
+@keyframes redVignettePulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.25; }
+}
+.animate-vignette-pulse {
+  animation: redVignettePulse 4s ease-in-out infinite;
+}
+
+/* Callout pulsing dot ring */
+@keyframes calloutRingPulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.animate-callout-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: calloutRingPulse 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}

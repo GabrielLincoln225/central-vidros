@@ -1,0 +1,12 @@
+# Raw source files in project root
+*.zip
+Black_SUV_in_studio_*
+Car_window_tinting_*
+SUV_rotating_*
+*.ps1
+generate_assets_sharp.cjs
+prepare_hero_assets.cjs
+
+# Local dependencies and caches
+node_modules
+.git

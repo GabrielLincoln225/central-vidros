@@ -1,0 +1,9 @@
+<svg width="480" height="100" viewBox="0 0 480 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Original Emblem Badge -->
+  <image href="/brand/logo-original.png" x="8" y="8" width="84" height="84" />
+  
+  <!-- Text Brand -->
+  <text x="108" y="52" fill="#FFFFFF" font-family="'Barlow Condensed', 'Arial Black', sans-serif" font-weight="900" font-size="44" letter-spacing="2">CENTRAL</text>
+  <text x="110" y="74" fill="#9CA3AF" font-family="'Inter', 'Segoe UI', sans-serif" font-weight="700" font-size="13" letter-spacing="4">VIDROS E ACESSÓRIOS</text>
+  <rect x="108" y="82" width="220" height="3" rx="1.5" fill="#F5402A" />
+</svg>

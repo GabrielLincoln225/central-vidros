@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="ogGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0A0A0A" stop-opacity="1" />
+      <stop offset="45%" stop-color="#0A0A0A" stop-opacity="0.95" />
+      <stop offset="65%" stop-color="#0A0A0A" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#0A0A0A" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#ogGrad)" />
+
+  <!-- Monogram C badge -->
+  <g transform="translate(80, 80)">
+    <rect x="0" y="0" width="70" height="70" rx="14" fill="#E8302A" />
+    <path d="M50 22 H30 C24 22 20 26 20 32 V38 C20 44 24 48 30 48 H50" stroke="#FFFFFF" stroke-width="7" stroke-linecap="square" fill="none" />
+  </g>
+  <text x="170" y="125" fill="#FFFFFF" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="44" letter-spacing="2">CENTRAL</text>
+  <text x="172" y="148" fill="#696B6B" font-family="'Inter', sans-serif" font-weight="700" font-size="13" letter-spacing="4">VIDROS E ACESSÓRIOS</text>
+
+  <!-- Tagline -->
+  <text x="80" y="250" fill="#E8302A" font-family="'Barlow Condensed', sans-serif" font-weight="800" font-size="20" letter-spacing="3">ALTA FLORESTA · MT · DESDE 2017</text>
+  <text x="80" y="320" fill="#FFFFFF" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="64" letter-spacing="1">PEÇAS E SERVIÇOS</text>
+  <text x="80" y="380" fill="#FFFFFF" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="64" letter-spacing="1">AUTOMOTIVOS</text>
+  
+  <!-- WhatsApp CTA Box -->
+  <g transform="translate(80, 440)">
+    <rect width="360" height="70" rx="8" fill="#E8302A" />
+    <text x="180" y="44" fill="#FFFFFF" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="24" letter-spacing="1.5" text-anchor="middle">ORÇAMENTO PELO WHATSAPP</text>
+  </g>
+  
+  <text x="80" y="560" fill="#696B6B" font-family="'Inter', sans-serif" font-weight="600" font-size="16">Av. Perimetral, 2099 · (66) 3521-3804</text>
+</svg>

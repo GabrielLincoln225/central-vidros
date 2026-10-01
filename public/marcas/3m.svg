@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 80" fill="currentColor">
+  <!-- 3M bold mark -->
+  <path d="M20 18 h38 c10 0 16 6 16 13 c0 5 -3 9 -8 11 c7 2 10 7 10 13 c0 8 -7 15 -18 15 h-38 z M34 30 v9 h20 c4 0 7 -2 7 -4.5 s-3 -4.5 -7 -4.5 z M34 49 v11 h22 c5 0 8 -2.5 8 -5.5 s-3 -5.5 -8 -5.5 z" />
+  <path d="M84 18 h16 l18 28 l18 -28 h16 v52 h-14 v-32 l-15 24 h-10 l-15 -24 v32 h-14 z" />
+</svg>

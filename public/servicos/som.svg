@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700">
+    <defs>
+      <radialGradient id="bgGlow" cx="70%" cy="30%" r="60%">
+        <stop offset="0%" stop-color="#1C1C1C" />
+        <stop offset="100%" stop-color="#0A0A0A" />
+      </radialGradient>
+      <linearGradient id="redAccent" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#E8302A" />
+        <stop offset="100%" stop-color="#E8302A" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+    <!-- Background -->
+    <rect width="1000" height="700" fill="url(#bgGlow)" />
+    
+    <!-- Precision grid lines -->
+    <line x1="80" y1="0" x2="80" y2="700" stroke="#1C1C1C" stroke-width="1" />
+    <line x1="920" y1="0" x2="920" y2="700" stroke="#1C1C1C" stroke-width="1" />
+    <line x1="0" y1="120" x2="1000" y2="120" stroke="#1C1C1C" stroke-width="1" />
+    <line x1="0" y1="580" x2="1000" y2="580" stroke="#1C1C1C" stroke-width="1" />
+
+    <!-- Corner marks -->
+    <path d="M 70 130 H 90 M 80 120 V 140" stroke="#696B6B" stroke-width="2" opacity="0.6"/>
+    <path d="M 910 130 H 930 M 920 120 V 140" stroke="#696B6B" stroke-width="2" opacity="0.6"/>
+
+    <!-- Subtle watermarked service number -->
+    <text x="650" y="440" fill="#141414" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="340" text-anchor="middle">05</text>
+
+    <!-- Top badge -->
+    <rect x="80" y="80" width="180" height="28" fill="#141414" stroke="#1C1C1C" />
+    <text x="96" y="99" fill="#E8302A" font-family="'Barlow Condensed', sans-serif" font-weight="800" font-size="14" letter-spacing="2">CENTRAL · SERVIÇO 05</text>
+
+    <!-- Service Title & Subtitle -->
+    <text x="80" y="320" fill="#E8302A" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="28" letter-spacing="3">05 / 09</text>
+    <text x="80" y="390" fill="#FFFFFF" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="64" letter-spacing="1">SOM E MULTIMÍDIA</text>
+    <text x="80" y="440" fill="#696B6B" font-family="'Inter', sans-serif" font-weight="600" font-size="22">Instalação Profissional</text>
+
+    <!-- Decorative Red Rule -->
+    <rect x="80" y="480" width="160" height="3" fill="#E8302A" />
+
+    <text x="80" y="550" fill="#696B6B" font-family="'Inter', sans-serif" font-weight="500" font-size="14" letter-spacing="1">ALTA FLORESTA · MT · DESDE 2017</text>
+  </svg>
